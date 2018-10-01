@@ -147,7 +147,7 @@ RUBY_2.5_PATCHLEVEL=		0
 GTK2_VERSION=			2.10.0
 GTK3_VERSION=			3.0.0
 GTK2_PORT_VERSION=		2.24.32
-GTK3_PORT_VERSION=		3.24.0
+GTK3_PORT_VERSION=		3.24.1
 
 # ------------------------------------------------------------------------
 # default gcc and binutils
@@ -167,7 +167,7 @@ ASPELL_CORE_VERSION=		0.60.6.1
 # apr1 and other apache projects
 # ------------------------------------------------------------------------
 
-APR1_VERSION=			1.6.3
+APR1_VERSION=			1.6.5
 APR1_UTIL_VERSION=		1.6.1
 SUBVERSION_VERSION=		1.10.2
 
@@ -180,9 +180,9 @@ LIBTOOL_VERSION=		2.4.6
 FREI0R_VERSION=			1.6.1
 M17N_VERSION=			1.8.0
 GLIBC_VERSION=			2.26
-GSTREAMER1_VERSION=		1.14.2
+GSTREAMER1_VERSION=		1.14.3
 GSTREAMER1_GST=			1.0
-GSTREAMER1_SOVERSION=		0.1402.0
+GSTREAMER1_SOVERSION=		0.1403.0
 XORG_VERSION=			7.7
 FIREFOX52_VERSION=		52.9.0
 
@@ -197,6 +197,6 @@ GNATCROSS_FREEBSD_12=		12.0
 # Qt and Lumina versions
 # ------------------------------------------------------------------------
 
-QT5_VERSION=			5.11.1
+QT5_VERSION=			5.11.2
 LUMINA_VERSION=			1.4.1
 LUMINA_RELEASE_TAG=		b6536c1

@@ -11,6 +11,8 @@ Libthr_FreeBSD=		libthr.so.3
 Libsbuf_FreeBSD=	libsbuf.so.6
 Libdevstat_FreeBSD=	libdevstat.so.7
 Libprocstat_FreeBSD=	libprocstat.so.1
+Libgeom_FreeBSD=	libgeom.so.5
+Libbsdxml_FreeBSD=	libbsdxml.so.4
 
 CPA=			-RpP
 
@@ -147,8 +149,10 @@ static_lib_generic=	/usr/lib/libc.a \
 			/usr/lib/libcrypt.a \
 			/usr/lib/libpthread.a
 static_lib_FreeBSD=	${static_lib_generic} \
+			/usr/lib/libbsdxml.a \
 			/usr/lib/libcompat.a \
 			/usr/lib/libdevstat.a \
+			/usr/lib/libgeom.a \
 			/usr/lib/libkvm.a \
 			/usr/lib/libprocstat.a \
 			/usr/lib/libthr.a \
@@ -199,7 +203,9 @@ dynamic_generic=	/lib/${libc} \
 			/lib/${libkvm} \
 			/usr/lib/${librt}
 dynamic_lib_FreeBSD=	${dynamic_generic} \
+			/lib/${Libbsdxml_FreeBSD} \
 			/lib/${Libelf_FreeBSD} \
+			/lib/${Libgeom_FreeBSD} \
 			/lib/${Libsbuf_FreeBSD} \
 			/lib/${Libthr_FreeBSD} \
 			/lib/${Libdevstat_FreeBSD} \
@@ -333,8 +339,12 @@ posix_headers=		aio.h \
 headers_SunOS_dirs=	#end
 headers_SunOS=		#end
 
+headers_Darwin_dirs=	#end
+headers_Darwin=		#end
+
 headers_FreeBSD_dirs=	arpa \
 			dev \
+			geom \
 			net \
 			net80211 \
 			netipsec \
@@ -403,6 +413,7 @@ headers_FreeBSD=	${headers_DragonFly:Nnet/*:Nutil.h} \
 			libusb20.h \
 			libusb20_desc.h \
 			kenv.h \
+			libgeom.h \
 			libprocstat.h \
 			# end
 
@@ -543,6 +554,7 @@ headers_Linux=		_G_config.h \
 
 pcfiles_Linux=		# end
 pcfiles_SunOS=		# end
+pcfiles_Darwin=		# end
 pcfiles_FreeBSD=	libusb-0.1.pc \
 			libusb-2.0.pc \
 			libusb-1.0.pc \
@@ -613,6 +625,8 @@ install:
 	mv ${DESTDIR}${BASE}/bin/sh ${DESTDIR}${BASE}/usr/xpg4/bin/
 	mv ${DESTDIR}${BASE}/usr/bin/bash ${DESTDIR}${BASE}/bin/bash
 	ln ${DESTDIR}${BASE}/bin/bash ${DESTDIR}${BASE}/bin/sh
+.elif "${OPSYS}" == "Darwin"
+	cp ${CPA} ../${OPSYS:tl}/* ${DESTDIR}${BASE}/
 .else
 .  for item in ${Bin_${OPSYS}}
 	${BSD_INSTALL_PROGRAM} ../${OPSYS:tl}${item} ${DESTDIR}${BASE}/bin/
@@ -648,10 +662,11 @@ install:
 .if ${OPSYS} == FreeBSD
 	(cd ${DESTDIR}${BASE}/usr/lib && \
 		ln -s ${Libthr_FreeBSD} libthr.so && \
+		ln -s ${Libbsdxml_FreeBSD} libbsdxml.so && \
 		ln -s ${Libdevstat_FreeBSD} libdevstat.so && \
 		ln -s ${Libprocstat_FreeBSD} libprocstat.so && \
+		ln -s ${Libgeom_FreeBSD} libgeom.so && \
 		ln -s libthr.so libpthread.so)
-	
 .endif
 .if ${OPSYS} == Linux
 .  for item in ${Linux_static_libs}
@@ -714,7 +729,7 @@ install:
 	# from bash package
 	cp ${CPA} ${LOCALBASE}/bin/bash ${DESTDIR}${BASE}/bin/
 .endif
-.if ${OPSYS} == Linux || ${OPSYS} == SunOS
+.if ${OPSYS} == Linux || ${OPSYS} == SunOS || ${OPSYS} == Darwin
 	# use coreutils that FreeBSD and DragonFly passed on (/bin)
 .  for item in [ chmod cp date echo expr kill link ln ls mkdir mv pwd \
 	realpath rm rmdir sleep test unlink
@@ -784,6 +799,9 @@ install:
 		> ${DESTDIR}${BASE}/usr/bin/fgrep
 	chmod 755 ${DESTDIR}${BASE}/usr/bin/egrep \
 		${DESTDIR}${BASE}/usr/bin/fgrep
+.if ${OPSYS} == Darwin
+	rm ${DESTDIR}${BASE}/usr/bin/objdump-sysroot
+.endif
 .if ${OPSYS} == DragonFly || ${OPSYS} == FreeBSD
 .  for LC in COLLATE CTYPE MESSAGES MONETARY NUMERIC TIME
 	${BSD_INSTALL_DATA} ../${OPSYS:tl}/usr/share/locale/en_US.UTF-8/LC_${LC} \
